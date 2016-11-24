@@ -3,13 +3,19 @@ image: Visual Studio 2015
 configuration: Release
 platform: x64
 clone_folder: C:\projects\restbed
-init:
-- cmd: '"C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64'
+#init:
+#- cmd: '"C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64'
 install:
 - cmd: git submodule update --init --recursive
 build_script:
 - cmd: >-
     echo "Building OpenSSL Dependency..."
+    
+    echo %path%
+    
+    "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64
+    
+    echo %path%
 
     cd c:\projects\restbed\dependency\openssl
 
@@ -20,6 +26,8 @@ build_script:
     nmake -f ms\ntdll.mak
 
     set PATH=C:\projects\restbed\dependency\openssl\out32dll;%PATH%
+    
+    echo %path%
 
     echo "Building Restbed..."
 
