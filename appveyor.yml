@@ -1,0 +1,30 @@
+version: 1.0.{build}
+image: Visual Studio 2015
+configuration: Release
+platform: x64
+clone_folder: C:\projects\restbed
+#init:
+#- cmd: '"C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64'
+install:
+- cmd: git submodule update --init --recursive
+build_script:
+- cmd: echo %path%
+- cmd: %comspec% /k ""C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat"" amd64
+- cmd: echo %path%
+- cmd: echo "Building OpenSSL Dependency..."
+- cmd: cd c:\projects\restbed\dependency\openssl
+- cmd: perl Configure VC-WIN64A
+- cmd: ms\do_win64a
+- cmd: nmake -f ms\ntdll.mak
+- cmd: set "PATH=C:\projects\restbed\dependency\openssl\out32dll;%PATH%"
+- cmd: echo "Building Restbed..."
+- cmd: mkdir c:\projects\restbed\build
+- cmd: cd c:\projects\restbed\build
+- cmd: cmake -G "Visual Studio 14 2015" -DBUILD_SSL=YES -DBUILD_EXAMPLES=NO -DBUILD_TESTS=YES ..
+- cmd: cmake --build . --target ALL_BUILD --config Release
+test_script:
+- cmd: >-
+    cd c:\projects\restbed\build
+
+    ctest
+deploy: off
