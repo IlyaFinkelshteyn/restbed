@@ -10,7 +10,17 @@ install:
 build_script:
 - cmd: >-
     echo "Building OpenSSL Dependency..." 
+ 
+    set PATH=C:\Perl\site\bin;C:\Perl\bin;C:\Windows\system32;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\CMake\bin;C:\Program Files (x86)\MSBuild\14.0\Bin;C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\Microsoft\SQLDB\DAC\120;C:\Program Files\Git\cmd;C:\Program Files\Git\usr\bin;C:\Program Files\AppVeyor\BuildAgent\
+
+    echo %path%
+
+    "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64
+
+    set PATH=C:\projects\restbed\dependency\openssl\out32dll;%PATH%
     
+    echo %path%
+ 
     cd c:\projects\restbed\dependency\openssl
 
     perl Configure VC-WIN64A
@@ -18,14 +28,6 @@ build_script:
     ms\do_win64a
 
     nmake -f ms\ntdll.mak
-
-    set PATH=C:\Windows
-
-    "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64
-
-    set PATH=C:\projects\restbed\dependency\openssl\out32dll;%PATH%
-    
-    echo %path%
 
     echo "Building Restbed..."
 
