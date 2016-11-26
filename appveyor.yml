@@ -5,41 +5,28 @@ platform: x64
 clone_folder: C:\projects\restbed
 #init:
 #- cmd: '"C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64'
+
 install:
 - cmd: git submodule update --init --recursive
-- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+#- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 build_script:
-- cmd: >-
-    echo "Building OpenSSL Dependency..." 
- 
-    set PATH=C:\Perl\site\bin;C:\Perl\bin;C:\Windows\system32;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\CMake\bin;C:\Program Files (x86)\MSBuild\14.0\Bin;C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\Microsoft\SQLDB\DAC\120;C:\Program Files\Git\cmd;C:\Program Files\Git\usr\bin;C:\Program Files\AppVeyor\BuildAgent\
-
-    echo %path%
-
-    "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64
-
-    set PATH=C:\projects\restbed\dependency\openssl\out32dll;%PATH%
+- cmd: echo "Building OpenSSL Dependency..." 
+- cmd: set PATH=C:\Perl\site\bin;C:\Perl\bin;C:\Windows\system32;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\CMake\bin;C:\Program Files (x86)\MSBuild\14.0\Bin;C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\Microsoft\SQLDB\DAC\120;C:\Program Files\Git\cmd;C:\Program Files\Git\usr\bin;C:\Program Files\AppVeyor\BuildAgent\
+- cmd: echo %path%
+- cmd: "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64
+- cmd: set PATH=C:\projects\restbed\dependency\openssl\out32dll;%PATH%
+- cmd: echo %path%
+- cmd: cd c:\projects\restbed\dependency\openssl
+- cmd: perl Configure VC-WIN64A
+- cmd: ms\do_win64a
+- cmd: nmake -f ms\ntdll.mak
+- cmd: echo "Building Restbed..."
+- cmd: mkdir c:\projects\restbed\build
+- cmd: cd c:\projects\restbed\build
+- cmd: "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64 && cmake -G "Visual Studio 14 2015" -DBUILD_SSL=YES -DBUILD_EXAMPLES=NO -DBUILD_TESTS=YES ..
+- cmd: "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64 && cmake --build . --target ALL_BUILD --config Release
     
-    echo %path%
- 
-    cd c:\projects\restbed\dependency\openssl
-
-    perl Configure VC-WIN64A
-
-    ms\do_win64a
-
-    nmake -f ms\ntdll.mak
-
-    echo "Building Restbed..."
-
-    mkdir c:\projects\restbed\build
-
-    cd c:\projects\restbed\build
-
-    cmake -G "Visual Studio 14 2015" -DBUILD_SSL=YES -DBUILD_EXAMPLES=NO -DBUILD_TESTS=YES ..
-
-    cmake --build . --target ALL_BUILD --config Release
 test_script:
 - cmd: >-
     cd c:\projects\restbed\build
