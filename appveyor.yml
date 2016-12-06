@@ -9,7 +9,8 @@ install:
 - cmd: git submodule update --init --recursive
 build_script:
 - cmd: echo %path%
-- cmd: %comspec% /k ""C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat"" amd64
+#- cmd: %comspec% /k ""C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat"" amd64
+- '"C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /x64'
 - cmd: echo %path%
 - cmd: echo "Building OpenSSL Dependency..."
 - cmd: cd c:\projects\restbed\dependency\openssl
